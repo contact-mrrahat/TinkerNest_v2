@@ -60,7 +60,7 @@ namespace cfg
   constexpr uint8_t PIN_BTN = 33;
   constexpr uint8_t PIN_IR = 32;
   constexpr uint8_t PIN_DHT = 4;
-  constexpr uint8_t DHT_TYPE = DHT22;
+  constexpr uint8_t DHT_TYPE = DHT11;
   constexpr uint8_t RELAY_COUNT = 4;
   constexpr bool RELAY_ACTIVE_HIGH = true;
 
@@ -93,12 +93,12 @@ namespace cfg
 
   namespace ir
   {
-    constexpr uint32_t BTN_R1 = 0xFF30CF;
-    constexpr uint32_t BTN_R2 = 0xFF18E7;
-    constexpr uint32_t BTN_R3 = 0xFF7A85;
-    constexpr uint32_t BTN_R4 = 0xFF10EF;
-    constexpr uint32_t BTN_ALL_ON = 0xFF38C7;
-    constexpr uint32_t BTN_ALL_OFF = 0xFF5AA5;
+    constexpr uint32_t BTN_R1 = 0xE218EF807F;
+    constexpr uint32_t BTN_R2 = 0xE218EF40BF;
+    constexpr uint32_t BTN_R3 = 0xE218EFC03F;
+    constexpr uint32_t BTN_R4 = 0xE218EF20DF;
+    constexpr uint32_t BTN_ALL_ON = 0xE218EF48B7;
+    constexpr uint32_t BTN_ALL_OFF = 0xE218EF6897;
     constexpr uint32_t REPEAT = 0xFFFFFFFF;
   }
 
@@ -1189,7 +1189,12 @@ namespace blynkmgr
     if (millis() - lastTry < cfg::BLYNK_RETRY_MS)
       return;
     lastTry = millis();
-    Blynk.connect(0);
+    Serial.println("[Blynk] attempting connect");
+    if (!Blynk.connect(5000))
+    {
+      Serial.println("[Blynk] connect failed, retrying via begin()");
+      Blynk.begin(gCreds.authTok, gCreds.ssid, gCreds.pass, "blynk.cloud", 80);
+    }
   }
   void pushAll()
   {
@@ -1453,6 +1458,8 @@ static void wifiTask(void *)
         gState.wifiUp = false;
         gState.inetUp = false;
         gState.blynkUp = false;
+        Serial.println("[WiFi] down");
+        Blynk.disconnect();
         break;
       case WE_INET_UP:
         gState.inetUp = true;
@@ -1460,9 +1467,12 @@ static void wifiTask(void *)
       case WE_INET_DOWN:
         gState.inetUp = false;
         gState.blynkUp = false;
+        Serial.println("[WiFi] internet lost");
+        Blynk.disconnect();
         break;
       case WE_BLYNK_UP:
         gState.blynkUp = true;
+        Serial.println("[Blynk] connected");
         blynkmgr::pushAll();
         break;
       case WE_BLYNK_DOWN:
