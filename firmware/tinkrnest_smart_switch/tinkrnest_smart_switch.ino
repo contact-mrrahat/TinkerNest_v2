@@ -62,7 +62,7 @@ namespace cfg
   constexpr uint8_t PIN_DHT = 4;
   constexpr uint8_t DHT_TYPE = DHT11;
   constexpr uint8_t RELAY_COUNT = 4;
-  constexpr bool RELAY_ACTIVE_HIGH = true;
+  constexpr bool RELAY_ACTIVE_HIGH = false;
 
   constexpr uint32_t WDT_TIMEOUT_S = 15;
   constexpr uint32_t NVS_DEBOUNCE_MS = 5000;

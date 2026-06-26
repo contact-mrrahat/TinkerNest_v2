@@ -55,9 +55,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
             builder: (context, ble, _) {
               return IconButton(
                 tooltip: 'Refresh status',
-                onPressed: ble.isConnected && !_isRefreshing
-                    ? _refreshStatus
-                    : null,
+                onPressed:
+                    ble.isConnected && !_isRefreshing ? _refreshStatus : null,
                 icon: _isRefreshing
                     ? const SizedBox(
                         width: 22,
