@@ -1,0 +1,24 @@
+name: tinkrnest_app
+description: TinkrNest Smart Switch — BLE provisioning and device control.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.6.0
+  flutter: '>=3.27.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  flutter_blue_plus: ^2.3.9
+  provider: ^6.1.5+1
+  permission_handler: ^12.0.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
